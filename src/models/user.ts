@@ -1,4 +1,4 @@
-import Client from "../../database";
+import Client from '../database';
 
 export interface User {
   id?: string;
@@ -11,7 +11,7 @@ export class UserStore {
   async index() {
     try {
       const conn = await Client.connect();
-      const sql = "SELECT * FROM users";
+      const sql = 'SELECT * FROM users';
       const result = await conn.query(sql);
 
       conn.release();
