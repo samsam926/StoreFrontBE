@@ -1,4 +1,7 @@
 import Client from '../database';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export interface Product {
   id?: string;
@@ -10,37 +13,55 @@ export interface Product {
 export class ProductStore {
   async index() {
     try {
-      const conn = await Client.connect();
-      console.log(conn);
-      const sql = `SELECT * FROM products`;
-      console.log(sql);
-      const result = await conn.query(sql);
-      conn.release();
-      return result.rows;
+      console.log('conn');
+      const conn = await Client.connect().catch((err) => console.log(err));
+      const sql = `SELECT * FROM product`;
+      if (conn) {
+        const result = await conn.query(sql);
+        conn.release();
+        return result.rows;
+      }
+      return null;
     } catch (err) {
       throw new Error(`Can't get products, Error ${err}`);
     }
   }
-  async show(id: number) {
+  async show(id: string) {
     try {
       const conn = await Client.connect();
-      const sql = `SELECT * FROM products WHERE id=${id}`;
-      const result = await conn.query(sql);
+      const sql = `SELECT * FROM product WHERE id=($1)`;
+      const result = await conn.query(sql, [id]);
       conn.release();
-      return result.rows;
+      return result.rows[0];
     } catch (err) {
-      throw new Error(`Can't get products for id= ${id}, Error ${err}`);
+      throw new Error(`Can't get product for id= ${id}, Error ${err}`);
     }
   }
-  async create() {
+  async create(product: Product) {
     try {
       const conn = await Client.connect();
-      const sql = 'CREATE * FROM products';
-      const result = await conn.query(sql);
+      const sql =
+        'INSERT INTO product (name, price, category) VALUES($1, $2, $3) RETURNING *';
+      const result = await conn.query(sql, [
+        product.name,
+        product.price,
+        product.category
+      ]);
       conn.release();
-      return result.rows;
+      return result.rows[0];
     } catch (err) {
-      throw new Error(`Can't get products, Error ${err}`);
+      throw new Error(`Can't create product, Error ${err}`);
+    }
+  }
+  async delete(id: string): Promise<Product> {
+    try {
+      const sql = 'DELETE FROM product WHERE id=($1)';
+      const conn = await Client.connect();
+      const result = await conn.query(sql, [id]);
+      conn.release();
+      return result.rows[0];
+    } catch (err) {
+      throw new Error(`Could not delete article ${id}. Error: ${err}`);
     }
   }
 }

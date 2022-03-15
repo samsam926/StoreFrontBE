@@ -1,5 +1,6 @@
 import express from 'express';
 import productsRoutes from './helpers/products';
+import userRoutes from './helpers/users';
 
 const app = express();
 const port = 5000;
@@ -7,6 +8,7 @@ const port = 5000;
 // routes
 app.use(express.json());
 productsRoutes(app);
+userRoutes(app);
 //set endpoint
 app.get('/', (req: express.Request, res: express.Response): void => {
   res.send('Hello, World.');

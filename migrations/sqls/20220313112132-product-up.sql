@@ -2,6 +2,6 @@
 CREATE TABLE product (
 	id serial PRIMARY KEY,
 	name VARCHAR ( 100 ) NOT NULL,
-	price INT ( 50 ) NOT NULL,
-	category VARCHAR ( 100 ),
-);
+	price INT NOT NULL,
+	category VARCHAR ( 100 )
+)
