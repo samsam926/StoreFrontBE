@@ -8,9 +8,15 @@ import { User, UserInfo } from '../models/user';
 
 const store = new UserInfo();
 
-const show = async (_req: Request, res: Response) => {
+const index = async (_req: Request, res: Response) => {
   console.log('req.body');
   const user = await store.index();
+  res.json(user);
+};
+
+const show = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const user = await store.show(id);
   res.json(user);
 };
 
@@ -21,7 +27,6 @@ const create = async (req: Request, res: Response) => {
     password: req.body.password
   };
 
-  console.log(user, '1111');
   if (!user.firstName || !user.password) return;
   try {
     const newUser = await store.create(user);
@@ -69,7 +74,8 @@ const update = async (req: Request, res: Response) => {
 };
 
 const userRoutes = (app: Application) => {
-  app.get('/user/getUsers', checkauth, show);
+  app.get('/user', checkauth, index);
+  app.get('/user/:id', checkauth, show);
   app.post('/user/createUser', create);
   app.post('/user/updateUser', checkauth, update);
 };

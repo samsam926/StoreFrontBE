@@ -1,6 +1,7 @@
 import express from 'express';
-import productsRoutes from './helpers/products';
-import userRoutes from './helpers/users';
+import orderRoutes from './handlers/orders';
+import productsRoutes from './handlers/products';
+import userRoutes from './handlers/users';
 
 const app = express();
 const port = 5000;
@@ -9,6 +10,7 @@ const port = 5000;
 app.use(express.json());
 productsRoutes(app);
 userRoutes(app);
+orderRoutes(app);
 //set endpoint
 app.get('/', (req: express.Request, res: express.Response): void => {
   res.send('Hello, World.');
