@@ -9,9 +9,14 @@ import { User, UserInfo } from '../models/user';
 const store = new UserInfo();
 
 const index = async (_req: Request, res: Response) => {
-  console.log('req.body');
-  const user = await store.index();
-  res.json(user);
+  try {
+    const user = await store.index().catch((err) => {
+      throw err;
+    });
+    res.json(user);
+  } catch (error) {
+    throw error;
+  }
 };
 
 const show = async (req: Request, res: Response) => {

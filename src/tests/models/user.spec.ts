@@ -1,4 +1,4 @@
-import { UserInfo } from '../../models/user';
+import { User, UserInfo } from '../../models/user';
 
 const store = new UserInfo();
 
@@ -16,11 +16,12 @@ describe('User Model', () => {
   });
 
   it('create method should create a user', async () => {
-    const result = await store.create({
+    const user: User = {
       firstName: 'Ahmed',
       lastName: 'Ali',
       password: 'password123'
-    });
+    };
+    const result = await store.create(user);
     expect(result).toBeTruthy();
   });
 

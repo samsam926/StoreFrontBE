@@ -1,74 +1,19 @@
-import { Book, BookStore } from '../../models/book';
+import supertest from 'supertest';
+import app from '../..';
 
-const store = new BookStore();
+const request = supertest(app);
 
-describe('Book Model', () => {
-  it('should have an index method', () => {
-    expect(store.index).toBeDefined();
+describe('Test orders endpoints responses', () => {
+  it('should return unauthorized to show orders', async () => {
+    const response = await request.get('/order');
+    expect(response.status).toBe(401);
   });
-
-  it('should have a show method', () => {
-    expect(store.index).toBeDefined();
+  it('should return unauthorized to show orders for users', async () => {
+    const response = await request.get('/user/1/orders');
+    expect(response.status).toBe(401);
   });
-
-  it('should have a create method', () => {
-    expect(store.index).toBeDefined();
-  });
-
-  it('should have a update method', () => {
-    expect(store.index).toBeDefined();
-  });
-
-  it('should have a delete method', () => {
-    expect(store.index).toBeDefined();
-  });
-
-  it('create method should add a book', async () => {
-    console.log(process.env.POSTGRES_PASSWORD, 'TESSSST');
-
-    const result = await store.create({
-      title: 'Bridge to Terabithia',
-      totalPages: 250,
-      author: 'Katherine Paterson',
-      type: 'Childrens'
-    });
-    expect(result).toEqual({
-      id: 1,
-      title: 'Bridge to Terabithia',
-      totalPages: 250,
-      author: 'Katherine Paterson',
-      type: 'Childrens'
-    });
-  });
-
-  it('index method should return a list of books', async () => {
-    const result = await store.index();
-    expect(result).toEqual([
-      {
-        id: 1,
-        title: 'Bridge to Terabithia',
-        totalPages: 250,
-        author: 'Katherine Paterson',
-        type: 'Childrens'
-      }
-    ]);
-  });
-
-  it('show method should return the correct book', async () => {
-    const result = await store.show('1');
-    expect(result).toEqual({
-      id: 1,
-      title: 'Bridge to Terabithia',
-      totalPages: 250,
-      author: 'Katherine Paterson',
-      type: 'Childrens'
-    });
-  });
-
-  it('delete method should remove the book', async () => {
-    store.delete('1');
-    const result = await store.index();
-
-    expect(result).toEqual([]);
+  it('should return unauthorized to create orders', async () => {
+    const response = await request.get('/user/1/create-order');
+    expect(response.status).toBe(401);
   });
 });

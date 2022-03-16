@@ -12,18 +12,24 @@ const saltRounds = process.env.SALT_ROUNDS as string;
 const pepper = process.env.PEPPER;
 
 export class UserInfo {
-  async index(): Promise<User[]> {
+  async index(): Promise<User[] | string> {
     try {
       // connect to database
       const conn = await Client.connect();
       // SQL command
       const sql = 'SELECT * FROM users';
       // Get result from command
-      const result = await conn.query(sql);
+      const result = await conn.query(sql).catch((err) => {
+        throw err;
+      });
       // release database after get result
       conn.release();
       // return result of rows
-      return result.rows;
+      if (result.rows && result.rows.length) {
+        return result.rows;
+      } else {
+        return 'no users found';
+      }
     } catch (error) {
       throw new Error(`Could not get users. Error ${error}`);
     }
@@ -61,12 +67,8 @@ export class UserInfo {
 
     const result = await conn.query(sql, [username]);
 
-    console.log(password + pepper);
-
     if (result.rows.length) {
       const user = result.rows[0];
-
-      console.log(user);
 
       if (bcrypt.compareSync(password + pepper, user.password_digest)) {
         return user;

@@ -13,8 +13,9 @@ export interface Product {
 export class ProductStore {
   async index() {
     try {
-      console.log('conn');
-      const conn = await Client.connect().catch((err) => console.log(err));
+      const conn = await Client.connect().catch((err) => {
+        throw err;
+      });
       const sql = `SELECT * FROM product`;
       if (conn) {
         const result = await conn.query(sql);
@@ -53,13 +54,17 @@ export class ProductStore {
       throw new Error(`Can't create product, Error ${err}`);
     }
   }
-  async delete(id: string): Promise<Product> {
+  async delete(id: string): Promise<Product | string> {
     try {
       const sql = 'DELETE FROM product WHERE id=($1)';
       const conn = await Client.connect();
       const result = await conn.query(sql, [id]);
       conn.release();
-      return result.rows[0];
+      if (result.rows && result.rows.length) {
+        return result.rows[0];
+      } else {
+        return 'no product found';
+      }
     } catch (err) {
       throw new Error(`Could not delete product ${id}. Error: ${err}`);
     }

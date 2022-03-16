@@ -20,8 +20,9 @@ export interface Order {
 export class OrderStore {
   async index() {
     try {
-      console.log('conn');
-      const conn = await Client.connect().catch((err) => console.log(err));
+      const conn = await Client.connect().catch((err) => {
+        throw err;
+      });
       const sql = `SELECT * FROM orders`;
       if (conn) {
         const result = await conn.query(sql);

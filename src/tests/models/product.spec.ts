@@ -1,74 +1,52 @@
-import { Book, BookStore } from '../../models/book';
+import { Product, ProductStore } from '../../models/product';
 
-const store = new BookStore();
+const store = new ProductStore();
 
-describe('Book Model', () => {
+describe('Product Model', () => {
   it('should have an index method', () => {
     expect(store.index).toBeDefined();
   });
 
   it('should have a show method', () => {
-    expect(store.index).toBeDefined();
+    expect(store.show).toBeDefined();
   });
 
   it('should have a create method', () => {
-    expect(store.index).toBeDefined();
-  });
-
-  it('should have a update method', () => {
-    expect(store.index).toBeDefined();
+    expect(store.create).toBeDefined();
   });
 
   it('should have a delete method', () => {
-    expect(store.index).toBeDefined();
+    expect(store.delete).toBeDefined();
   });
 
-  it('create method should add a book', async () => {
-    console.log(process.env.POSTGRES_PASSWORD, 'TESSSST');
-
-    const result = await store.create({
-      title: 'Bridge to Terabithia',
-      totalPages: 250,
-      author: 'Katherine Paterson',
-      type: 'Childrens'
-    });
-    expect(result).toEqual({
-      id: 1,
-      title: 'Bridge to Terabithia',
-      totalPages: 250,
-      author: 'Katherine Paterson',
-      type: 'Childrens'
-    });
+  it('create method should add a product', async () => {
+    const product: Product = {
+      name: 'product_test',
+      price: 10,
+      category: 'category_test'
+    };
+    const result = await store.create(product);
+    expect(result).toBeTruthy();
   });
 
-  it('index method should return a list of books', async () => {
+  it('index method should return a list of products', async () => {
     const result = await store.index();
-    expect(result).toEqual([
-      {
-        id: 1,
-        title: 'Bridge to Terabithia',
-        totalPages: 250,
-        author: 'Katherine Paterson',
-        type: 'Childrens'
-      }
-    ]);
+    expect(result).toBeTruthy();
   });
 
-  it('show method should return the correct book', async () => {
-    const result = await store.show('1');
-    expect(result).toEqual({
-      id: 1,
-      title: 'Bridge to Terabithia',
-      totalPages: 250,
-      author: 'Katherine Paterson',
-      type: 'Childrens'
-    });
+  it('show method should return the correct product', async () => {
+    const product: Product = {
+      id: '2',
+      name: 'product_test',
+      price: 10,
+      category: 'category_test'
+    };
+    const result = await store.show('2');
+    expect(result).toBeTruthy();
   });
 
-  it('delete method should remove the book', async () => {
-    store.delete('1');
-    const result = await store.index();
-
-    expect(result).toEqual([]);
+  it('delete method should return no product found if no product', async () => {
+    const deleteResult = await store.delete('1');
+    expect(deleteResult).toEqual('no product found');
   });
 });

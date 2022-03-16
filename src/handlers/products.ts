@@ -8,7 +8,8 @@ const index = async (_req: Request, res: Response) => {
   res.json(productIndexing);
 };
 const showProduct = async (req: Request, res: Response) => {
-  const productIndexing = await product.show(req.body.id);
+  const { id } = req.params;
+  const productIndexing = await product.show(id);
   res.json(productIndexing);
 };
 

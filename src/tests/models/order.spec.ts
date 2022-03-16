@@ -1,72 +1,67 @@
-import { Book, BookStore } from '../../models/book';
+import { Order, OrderStore } from '../../models/order';
 
-const store = new BookStore();
+const store = new OrderStore();
 
-describe('Book Model', () => {
+describe('Order Model', () => {
   it('should have an index method', () => {
     expect(store.index).toBeDefined();
   });
 
   it('should have a show method', () => {
-    expect(store.index).toBeDefined();
+    expect(store.showUserOrder).toBeDefined();
   });
 
   it('should have a create method', () => {
-    expect(store.index).toBeDefined();
-  });
-
-  it('should have a update method', () => {
-    expect(store.index).toBeDefined();
+    expect(store.createOrder).toBeDefined();
   });
 
   it('should have a delete method', () => {
-    expect(store.index).toBeDefined();
+    expect(store.deleteOrder).toBeDefined();
   });
 
-  it('create method should add a book', async () => {
-    console.log(process.env.POSTGRES_PASSWORD, 'TESSSST');
-
-    const result = await store.create({
-      title: 'Bridge to Terabithia',
-      totalPages: 250,
-      author: 'Katherine Paterson',
-      type: 'Childrens'
-    });
+  it('create method should add an order to user', async () => {
+    const order: Order = {
+      product_id: 10,
+      product_quantity: 15,
+      user_id: 1,
+      status: 'Active'
+    };
+    const result = await store.createOrder(order);
     expect(result).toEqual({
-      id: 1,
-      title: 'Bridge to Terabithia',
-      totalPages: 250,
-      author: 'Katherine Paterson',
-      type: 'Childrens'
+      id: '1',
+      product_id: 10,
+      product_quantity: 15,
+      user_id: 1,
+      status: 'Active'
     });
   });
 
-  it('index method should return a list of books', async () => {
+  it('index method should return a list of orders', async () => {
     const result = await store.index();
     expect(result).toEqual([
       {
         id: 1,
-        title: 'Bridge to Terabithia',
-        totalPages: 250,
-        author: 'Katherine Paterson',
-        type: 'Childrens'
+        product_id: 10,
+        product_quantity: 15,
+        user_id: 1,
+        status: 'Active'
       }
     ]);
   });
 
-  it('show method should return the correct book', async () => {
-    const result = await store.show('1');
+  it('show method should return the correct order', async () => {
+    const result = await store.showUserOrder('1');
     expect(result).toEqual({
       id: 1,
-      title: 'Bridge to Terabithia',
-      totalPages: 250,
-      author: 'Katherine Paterson',
-      type: 'Childrens'
+      product_id: 10,
+      product_quantity: 15,
+      user_id: 1,
+      status: 'Active'
     });
   });
 
-  it('delete method should remove the book', async () => {
-    store.delete('1');
+  it('delete method should remove the order', async () => {
+    store.deleteOrder('1');
     const result = await store.index();
 
     expect(result).toEqual([]);

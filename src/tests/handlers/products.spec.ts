@@ -1,74 +1,19 @@
-import { Book, BookStore } from '../../models/book';
+import supertest from 'supertest';
+import app from '../..';
 
-const store = new BookStore();
+const request = supertest(app);
 
-describe('Book Model', () => {
-  it('should have an index method', () => {
-    expect(store.index).toBeDefined();
+describe('Test products endpoints responses', () => {
+  it('should return all products', async () => {
+    const response = await request.get('/product');
+    expect(response.status).toBe(200);
   });
-
-  it('should have a show method', () => {
-    expect(store.index).toBeDefined();
+  it('should return product of id (2)', async () => {
+    const response = await request.get('/product/2');
+    expect(response.status).toBe(200);
   });
-
-  it('should have a create method', () => {
-    expect(store.index).toBeDefined();
-  });
-
-  it('should have a update method', () => {
-    expect(store.index).toBeDefined();
-  });
-
-  it('should have a delete method', () => {
-    expect(store.index).toBeDefined();
-  });
-
-  it('create method should add a book', async () => {
-    console.log(process.env.POSTGRES_PASSWORD, 'TESSSST');
-
-    const result = await store.create({
-      title: 'Bridge to Terabithia',
-      totalPages: 250,
-      author: 'Katherine Paterson',
-      type: 'Childrens'
-    });
-    expect(result).toEqual({
-      id: 1,
-      title: 'Bridge to Terabithia',
-      totalPages: 250,
-      author: 'Katherine Paterson',
-      type: 'Childrens'
-    });
-  });
-
-  it('index method should return a list of books', async () => {
-    const result = await store.index();
-    expect(result).toEqual([
-      {
-        id: 1,
-        title: 'Bridge to Terabithia',
-        totalPages: 250,
-        author: 'Katherine Paterson',
-        type: 'Childrens'
-      }
-    ]);
-  });
-
-  it('show method should return the correct book', async () => {
-    const result = await store.show('1');
-    expect(result).toEqual({
-      id: 1,
-      title: 'Bridge to Terabithia',
-      totalPages: 250,
-      author: 'Katherine Paterson',
-      type: 'Childrens'
-    });
-  });
-
-  it('delete method should remove the book', async () => {
-    store.delete('1');
-    const result = await store.index();
-
-    expect(result).toEqual([]);
+  it('should return unauthorized', async () => {
+    const response = await request.get('/product/create-product');
+    expect(response.status).toBe(401);
   });
 });
