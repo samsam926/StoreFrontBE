@@ -1,5 +1,17 @@
 # StoreFrontBE
 
+##ENV
+
+POSTGRES_HOST = "127.0.0.1"
+POSTGRES_DB = "shopping"
+POSTGRES_DB_TEST = "shopping_test"
+POSTGRES_USER = "postgres"
+POSTGRES_PASSWORD = "password123"
+ENV=dev
+BCRYPT_PASSWORD="s0//P4$$w0rD"
+SALT_ROUNDS=10
+JSONSECRETKEY=JSONTOKENTEST
+
 ## Runing Commands
 
 <!-- Create User -->
