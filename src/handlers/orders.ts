@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import { checkauth } from '../middleware/auth';
-import { Order, OrderStore } from '../models/order';
+import { Order, OrderProduct, OrderStore } from '../models/order';
 
 const order = new OrderStore();
 
@@ -12,12 +12,7 @@ const index = async (_req: Request, res: Response) => {
 
 const showOrders = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const showOrder = await order.showUserOrder(id);
-  res.json(showOrder);
-};
-
-const showActiveOrders = async (req: Request, res: Response) => {
-  const showOrder = await order.showUserActiveOrders();
+  const showOrder = await order.showActiveUserOrder(id);
   res.json(showOrder);
 };
 
@@ -37,10 +32,28 @@ const createOrder = async (req: Request, res: Response) => {
   }
 };
 
+const addOrderProducts = async (_req: Request, res: Response) => {
+  const orderId: number = +_req.params.id;
+  const { product_id } = _req.body;
+  const quantity: number = +_req.body.quantity;
+  const orderProduct: OrderProduct = {
+    quantity,
+    order_id: orderId,
+    product_id
+  };
+  try {
+    const addOrderProduct = await order.addOrderProduct(orderProduct);
+    res.json(addOrderProduct);
+  } catch (err) {
+    res.status(400);
+    res.json(err);
+  }
+};
+
 const orderRoutes = (app: express.Application) => {
   app.get('/order', checkauth, index);
   app.get('/user/:id/orders', checkauth, showOrders);
-  app.get('/active-orders', checkauth, showActiveOrders);
+  app.post('/order/:id/products', checkauth, addOrderProducts);
   app.post('/user/:id/create-order', checkauth, createOrder);
 };
 

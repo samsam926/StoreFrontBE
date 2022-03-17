@@ -11,11 +11,12 @@ export interface Order {
   status: string;
 }
 
-// - id
-// - id of each order in the order
-// - quantity of each order in the order
-// - user_id
-// - status of order (active or complete)
+export interface OrderProduct {
+  id?: number;
+  quantity: number;
+  order_id: number;
+  product_id: number;
+}
 
 export class OrderStore {
   async index() {
@@ -34,10 +35,10 @@ export class OrderStore {
       throw new Error(`Can't get orders, Error ${err}`);
     }
   }
-  async showUserOrder(id: string) {
+  async showActiveUserOrder(id: string) {
     try {
       const conn = await Client.connect();
-      const sql = `SELECT * FROM orders WHERE user_id=($1)`;
+      const sql = `SELECT * FROM orders WHERE user_id=($1) AND status='active'`;
       const result = await conn.query(sql, [id]).catch((err) => {
         throw err;
       });
@@ -51,21 +52,22 @@ export class OrderStore {
       throw new Error(`Can't get order for user_id= ${id}, Error ${err}`);
     }
   }
-  async showUserActiveOrders() {
+  async addOrderProduct(orderProduct: OrderProduct) {
     try {
+      const sql =
+        'INSERT INTO order_products (quantity, order_id, product_id) VALUES($1, $2, $3) RETURNING *';
       const conn = await Client.connect();
-      const sql = `SELECT product_id, product_quantity, status FROM orders INNER JOIN users ON users.id = orders.user_id WHERE orders.status LIKE 'active'`;
-      const result = await conn.query(sql).catch((err) => {
-        throw err;
-      });
+      const result = await conn.query(sql, [
+        orderProduct.quantity,
+        orderProduct.order_id,
+        orderProduct.product_id
+      ]);
       conn.release();
-      if (result.rows && result.rows.length) {
-        return result.rows[0];
-      } else {
-        return 'no results found';
-      }
+      return result.rows[0];
     } catch (err) {
-      throw new Error(`Can't get order for user_id, Error ${err}`);
+      throw new Error(
+        `Couldn't add product ${orderProduct.product_id} to order ${orderProduct.order_id}: ${err}`
+      );
     }
   }
   async createOrder(order: Order): Promise<Order> {

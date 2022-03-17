@@ -8,22 +8,21 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 #### Products
 
-- Index
-- Show (args: product id)
-- Create [args: Product](token required)
-- [OPTIONAL] Top 5 most popular products
-- [OPTIONAL] Products by category (args: product category)
+- Index '/product' [GET]
+- Show (args: product id) '/product/:id' [GET]
+- Create [args: Product](token required) '/product/create-product' [POST]
 
 #### Users
 
-- Index [token required]
-- Show [args: id](token required)
-- Create [args: User](token required)
+- Index [token required] '/user' [GET]
+- Show [args: id](token required) '/user/:id' [GET]
+- Create [args: User](token required) 'user/createUser' [POST]
 
 #### Orders
 
-- Current Order by user [args: user id](token required)
-- [OPTIONAL] Completed Orders by user [args: user id](token required)
+- Create Order by user [args: user id](token required) '/user/:id/create-order' [post]
+- Current Order Products [args: order id](token required) '/order/:id/products' [post]
+- Current Order by user [args: user id](token required) '/user/:id/orders' [GET]
 
 ## Data Shapes
 
@@ -34,12 +33,24 @@ These are the notes from a meeting with the frontend developer that describe wha
 - price
 - [OPTIONAL] category
 
+- example of product: {
+  "name": "product1",
+  "price": "10",
+  "category": "category1"
+  }
+
 #### User
 
 - id
 - firstName
 - lastName
 - password
+
+- example of user: {
+  "firstName": "haitham",
+  "lastName": "magdy",
+  "password": "password123"
+  }
 
 #### Orders
 
@@ -48,6 +59,12 @@ These are the notes from a meeting with the frontend developer that describe wha
 - quantity of each product in the order
 - user_id
 - status of order (active or complete)
+
+- example of order: {
+  "product": "1, 2, 3",
+  "status": "active",
+  "product_quantity": "3"
+  }
 
 #### SCHEMA
 
