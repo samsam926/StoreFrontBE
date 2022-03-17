@@ -16,6 +16,11 @@ const showOrders = async (req: Request, res: Response) => {
   res.json(showOrder);
 };
 
+const showActiveOrders = async (req: Request, res: Response) => {
+  const showOrder = await order.showUserActiveOrders();
+  res.json(showOrder);
+};
+
 const createOrder = async (req: Request, res: Response) => {
   const { id } = req.params;
   if (id) {
@@ -35,6 +40,7 @@ const createOrder = async (req: Request, res: Response) => {
 const orderRoutes = (app: express.Application) => {
   app.get('/order', checkauth, index);
   app.get('/user/:id/orders', checkauth, showOrders);
+  app.get('/active-orders', checkauth, showActiveOrders);
   app.post('/user/:id/create-order', checkauth, createOrder);
 };
 

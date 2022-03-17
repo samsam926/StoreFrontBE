@@ -79,6 +79,7 @@ Endpoints to access
 <http://localhost:5000/order>
 <http://localhost:5000/user/1/orders>
 <http://localhost:5000/user/1/create-order>
+<http://localhost:5000/active-orders>
 
 <!-- create body -->
 
