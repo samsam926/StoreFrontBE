@@ -13,6 +13,5 @@ export const checkauth = async (
   } catch (error) {
     res.status(401);
     res.json(`invalid token ${error}`);
-    next();
   }
 };
