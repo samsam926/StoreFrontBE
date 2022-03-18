@@ -8,7 +8,7 @@ describe('Order Model', () => {
   });
 
   it('should have a show method', () => {
-    expect(store.showUserOrder).toBeDefined();
+    expect(store.showActiveUserOrder).toBeDefined();
   });
 
   it('should have a create method', () => {
@@ -50,7 +50,7 @@ describe('Order Model', () => {
   });
 
   it('show method should return the correct order', async () => {
-    const result = await store.showUserOrder('1');
+    const result = await store.showActiveUserOrder('1');
     expect(result).toEqual({
       id: 1,
       product_id: 10,

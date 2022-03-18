@@ -69,3 +69,7 @@ These are the notes from a meeting with the frontend developer that describe wha
 #### SCHEMA
 
 Public Schema
+
+#### DATABASE PORT
+
+Default port: 5432

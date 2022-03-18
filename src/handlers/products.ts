@@ -4,23 +4,38 @@ import { checkauth } from '../middleware/auth';
 const product = new ProductStore();
 
 const index = async (_req: Request, res: Response) => {
-  const productIndexing = await product.index();
-  res.json(productIndexing);
+  try {
+    const productIndexing = await product.index();
+    res.json(productIndexing);
+  } catch (error) {
+    res.status(400);
+    res.json(error);
+  }
 };
 const showProduct = async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const productIndexing = await product.show(id);
-  res.json(productIndexing);
+  try {
+    const { id } = req.params;
+    const productIndexing = await product.show(id);
+    res.json(productIndexing);
+  } catch (error) {
+    res.status(400);
+    res.json(error);
+  }
 };
 
 const createProduct = async (req: Request, res: Response) => {
-  const productItem: Product = {
-    name: req.body.name,
-    price: req.body.price,
-    category: req.body.category
-  };
-  const productCreate = await product.create(productItem);
-  res.json(productCreate);
+  try {
+    const productItem: Product = {
+      name: req.body.name,
+      price: req.body.price,
+      category: req.body.category
+    };
+    const productCreate = await product.create(productItem);
+    res.json(productCreate);
+  } catch (error) {
+    res.status(400);
+    res.json(error);
+  }
 };
 
 const productsRoutes = (app: express.Application) => {
