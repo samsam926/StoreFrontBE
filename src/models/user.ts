@@ -45,7 +45,7 @@ export class UserInfo {
       throw new Error(`Can't get users for id= ${id}, Error ${err}`);
     }
   }
-  async create(u: User): Promise<User | null> {
+  async create(u: User): Promise<string> {
     try {
       const conn = await Client.connect();
       const sql =
@@ -76,5 +76,18 @@ export class UserInfo {
     }
 
     return null;
+  }
+  async delete(id: string): Promise<string> {
+    try {
+      const conn = await Client.connect();
+      const sql = 'DELETE FROM users WHERE id=$1 RETURNING *';
+      const result = await conn.query(sql, [id]);
+
+      conn.release();
+
+      return result.rows[0];
+    } catch (error) {
+      throw new Error(`unable delete user (${id}), ${error}`);
+    }
   }
 }

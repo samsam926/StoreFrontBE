@@ -36,17 +36,19 @@ const create = async (req: Request, res: Response) => {
     password: req.body.password
   };
 
-  if (!user.firstName || !user.password) return;
   try {
+    if (!user.firstName || !user.password) {
+      return res.send('no user info');
+    }
     const newUser = await store.create(user);
     const token = jwt.sign(
       { user: newUser },
       process.env.JSONSECRETKEY as string
     );
-    res.json(token);
+    return res.json(token);
   } catch (error: any) {
     res.status(400);
-    res.json(error + user);
+    return res.json(error + user);
   }
 };
 

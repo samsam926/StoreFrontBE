@@ -1,3 +1,4 @@
+import { ProductStore } from '../../models/product';
 import { User, UserInfo } from '../../models/user';
 
 const store = new UserInfo();
