@@ -19,20 +19,68 @@ describe('Order Model', () => {
     expect(store.deleteOrder).toBeDefined();
   });
 
+  beforeAll(() => {
+    spyOn(OrderStore.prototype, 'createOrder').and.returnValue(
+      Promise.resolve({
+        id: '2',
+        product_id: 1,
+        product_quantity: 3,
+        user_id: 1,
+        status: 'active'
+      })
+    );
+    spyOn(OrderStore.prototype, 'showActiveUserOrder').and.returnValue(
+      Promise.resolve({
+        id: '1',
+        product_id: 1,
+        product_quantity: 3,
+        user_id: 1,
+        status: 'completed'
+      })
+    );
+    spyOn(OrderStore.prototype, 'deleteOrder').and.returnValue(
+      Promise.resolve({
+        id: '2',
+        product_id: 1,
+        product_quantity: 3,
+        user_id: 1,
+        status: 'active'
+      })
+    );
+    spyOn(OrderStore.prototype, 'index').and.returnValue(
+      Promise.resolve([
+        {
+          id: '1',
+          product_id: 1,
+          product_quantity: 3,
+          user_id: 1,
+          status: 'completed'
+        },
+        {
+          id: '2',
+          product_id: 1,
+          product_quantity: 3,
+          user_id: 1,
+          status: 'active'
+        }
+      ])
+    );
+  });
+
   it('create method should add an order to user', async () => {
-    const order: Order = {
-      product_id: 10,
-      product_quantity: 15,
+    const result = await store.createOrder({
+      id: '2',
+      product_id: 1,
+      product_quantity: 3,
       user_id: 1,
-      status: 'Active'
-    };
-    const result = await store.createOrder(order);
+      status: 'active'
+    });
     expect(result).toEqual({
-      id: '1',
-      product_id: 10,
-      product_quantity: 15,
+      id: '2',
+      product_id: 1,
+      product_quantity: 3,
       user_id: 1,
-      status: 'Active'
+      status: 'active'
     });
   });
 
@@ -40,11 +88,18 @@ describe('Order Model', () => {
     const result = await store.index();
     expect(result).toEqual([
       {
-        id: 1,
-        product_id: 10,
-        product_quantity: 15,
+        id: '1',
+        product_id: 1,
+        product_quantity: 3,
         user_id: 1,
-        status: 'Active'
+        status: 'completed'
+      },
+      {
+        id: '2',
+        product_id: 1,
+        product_quantity: 3,
+        user_id: 1,
+        status: 'active'
       }
     ]);
   });
@@ -52,18 +107,22 @@ describe('Order Model', () => {
   it('show method should return the correct order', async () => {
     const result = await store.showActiveUserOrder('1');
     expect(result).toEqual({
-      id: 1,
-      product_id: 10,
-      product_quantity: 15,
+      id: '1',
+      product_id: 1,
+      product_quantity: 3,
       user_id: 1,
-      status: 'Active'
+      status: 'completed'
     });
   });
 
   it('delete method should remove the order', async () => {
-    store.deleteOrder('1');
-    const result = await store.index();
-
-    expect(result).toEqual([]);
+    const result = await store.deleteOrder('2');
+    expect(result).toEqual({
+      id: '2',
+      product_id: 1,
+      product_quantity: 3,
+      user_id: 1,
+      status: 'active'
+    });
   });
 });
